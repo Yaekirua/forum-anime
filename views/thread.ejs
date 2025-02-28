@@ -1,0 +1,59 @@
+<div class="thread-container">
+    <div class="original-post">
+      <h1><%= thread.title %></h1>
+      <div class="post-meta">
+        <span>Posted by <%= thread.author %></span>
+        <span><%= thread.createdAt.toLocaleDateString() %></span>
+      </div>
+      <div class="post-content">
+        <%= thread.content %>
+      </div>
+    </div>
+  
+    <div class="replies">
+      <h2>Replies</h2>
+      <% replies.forEach(reply => { %>
+        <div class="reply">
+          <div class="reply-meta">
+            <span><%= reply.author %></span>
+            <span><%= reply.createdAt.toLocaleDateString() %></span>
+          </div>
+          <div class="reply-content">
+            <%= reply.content %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  
+    <div class="reply-form">
+      <h2>Post a Reply</h2>
+      <form action="/reply/create" method="POST">
+        <input type="hidden" name="threadId" value="<%= thread._id %>">
+        <textarea name="content" placeholder="Your reply..." rows="3" required></textarea>
+        <input type="text" name="author" placeholder="Your Name" required>
+        <button type="submit">Post Reply</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Socket.IO Script -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+  
+    socket.on('newReply', (reply) => {
+      const repliesContainer = document.querySelector('.replies');
+      const newReply = document.createElement('div');
+      newReply.className = 'reply';
+      newReply.innerHTML = `
+        <div class="reply-meta">
+          <span>${reply.author}</span>
+          <span>${new Date(reply.createdAt).toLocaleDateString()}</span>
+        </div>
+        <div class="reply-content">
+          ${reply.content}
+        </div>
+      `;
+      repliesContainer.appendChild(newReply);
+    });
+  </script>

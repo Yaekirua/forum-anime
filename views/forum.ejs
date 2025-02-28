@@ -1,0 +1,44 @@
+<h1 class="forum-header"><%= category.toUpperCase() %> Discussions</h1>
+
+<div class="new-thread">
+  <h2>Start New Thread</h2>
+  <form action="/thread/create" method="POST">
+    <input type="hidden" name="category" value="<%= category %>">
+    <input type="text" name="title" placeholder="Thread Title" required>
+    <textarea name="content" placeholder="Your content..." rows="5" required></textarea>
+    <input type="text" name="author" placeholder="Your Name" required>
+    <button type="submit">Create Thread</button>
+  </form>
+</div>
+
+<div class="thread-list">
+  <% threads.forEach(thread => { %>
+    <div class="thread-item">
+      <h3><a href="/thread/<%= thread._id %>"><%= thread.title %></a></h3>
+      <div class="thread-meta">
+        <span>By <%= thread.author %></span>
+        <span><%= thread.createdAt.toLocaleDateString() %></span>
+      </div>
+    </div>
+  <% }); %>
+</div>
+
+<!-- Socket.IO Script -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  socket.on('newThread', (thread) => {
+    const threadList = document.querySelector('.thread-list');
+    const newThread = document.createElement('div');
+    newThread.className = 'thread-item';
+    newThread.innerHTML = `
+      <h3><a href="/thread/${thread._id}">${thread.title}</a></h3>
+      <div class="thread-meta">
+        <span>By ${thread.author}</span>
+        <span>${new Date(thread.createdAt).toLocaleDateString()}</span>
+      </div>
+    `;
+    threadList.prepend(newThread);
+  });
+</script>

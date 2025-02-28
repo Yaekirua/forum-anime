@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Forum - <%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/">Home</a>
+      <a href="/forum/anime">Anime</a>
+      <a href="/forum/manga">Manga</a>
+      <a href="/forum/manhwa">Manhwa</a>
+      <a href="/forum/manhua">Manhua</a>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <%- body %> <!-- This is where the child template content is injected -->
+  </div>
+</body>
+</html>
